@@ -190,18 +190,55 @@ export default function Index() {
                 />
 
                 <InlineGrid columns={2} gap="400">
-                  <TextField
-                    label="Background Color (HEX)"
-                    value={bgColor}
-                    onChange={(val) => setBgColor(val)}
-                    autoComplete="off"
-                  />
-                  <TextField
-                    label="Text Color (HEX)"
-                    value={textColor}
-                    onChange={(val) => setTextColor(val)}
-                    autoComplete="off"
-                  />
+                  <Box>
+                    <TextField
+                      label="Background Color (HEX)"
+                      value={bgColor}
+                      onChange={(val) => setBgColor(val)}
+                      autoComplete="off"
+                      prefix={
+                        <input
+                          type="color"
+                          value={bgColor.startsWith("#") && bgColor.length === 7 ? bgColor : "#111213"}
+                          onChange={(e) => setBgColor(e.target.value)}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            padding: 0,
+                            border: "1px solid #ccc",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            background: "none",
+                          }}
+                        />
+                      }
+                    />
+                  </Box>
+
+                  <Box>
+                    <TextField
+                      label="Text Color (HEX)"
+                      value={textColor}
+                      onChange={(val) => setTextColor(val)}
+                      autoComplete="off"
+                      prefix={
+                        <input
+                          type="color"
+                          value={textColor.startsWith("#") && textColor.length === 7 ? textColor : "#ffffff"}
+                          onChange={(e) => setTextColor(e.target.value)}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            padding: 0,
+                            border: "1px solid #ccc",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            background: "none",
+                          }}
+                        />
+                      }
+                    />
+                  </Box>
                 </InlineGrid>
 
                 <Box paddingBlockStart="200">
@@ -219,7 +256,7 @@ export default function Index() {
                 <Text variant="headingMd" as="h2">
                   Live Preview
                 </Text>
-                
+
                 <style>{`
                   @keyframes marqueeScroll {
                     0% { transform: translateX(100%); }
