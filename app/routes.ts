@@ -1,4 +1,4 @@
-import { index, route, layout } from "@react-router/dev/routes";
+import { type RouteConfig, index, route, layout } from "@react-router/dev/routes";
 
 export default [
   index("routes/_index.jsx"),
@@ -7,4 +7,5 @@ export default [
   ]),
   route("privacy", "routes/privacy.jsx"),
   route("api/webhooks", "routes/api.webhooks.jsx"),
-];
+  route("auth/*", "routes/auth.$.jsx"),
+] satisfies RouteConfig;
