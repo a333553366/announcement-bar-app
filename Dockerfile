@@ -19,4 +19,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # 启动时自动同步表结构到 PostgreSQL，然后启动服务
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && react-router-serve ./build/server/index.js"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx react-router-serve ./build/server/index.js"]
