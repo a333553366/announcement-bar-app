@@ -219,21 +219,40 @@ export default function Index() {
                 <Text variant="headingMd" as="h2">
                   Live Preview
                 </Text>
+                
+                <style>{`
+                  @keyframes marqueeScroll {
+                    0% { transform: translateX(100%); }
+                    100% { transform: translateX(-100%); }
+                  }
+                `}</style>
+
                 <div
                   style={{
                     backgroundColor: bgColor,
                     color: textColor,
                     padding: "12px 16px",
                     borderRadius: "8px",
-                    textAlign: "center",
                     fontSize: "13px",
                     fontWeight: 500,
                     overflow: "hidden",
-                    whiteSpace: isMarquee ? "nowrap" : "normal",
+                    position: "relative",
+                    textAlign: isMarquee ? "left" : "center",
                   }}
                 >
-                  {message || "Announcement preview text here..."}
+                  <div
+                    style={{
+                      display: "inline-block",
+                      whiteSpace: "nowrap",
+                      animation: isMarquee ? "marqueeScroll 12s linear infinite" : "none",
+                      width: isMarquee ? "auto" : "100%",
+                      wordBreak: isMarquee ? "normal" : "break-word",
+                    }}
+                  >
+                    {message || "Announcement preview text here..."}
+                  </div>
                 </div>
+
                 <Text variant="bodySm" tone="subdued">
                   {enabled
                     ? isMarquee
