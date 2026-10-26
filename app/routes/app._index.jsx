@@ -18,23 +18,6 @@ import { authenticate } from "../shopify.server";
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
 
-  const response = await admin.graphql(
-    `#graphql
-      query getMetafield {
-        currentAppInstallation {
-          metafields(first: 1, namespace: "announcement_bar", keys: ["settings"]) {
-            edges {
-              node {
-                value
-              }
-            }
-          }
-        }
-      }`
-  );
-
-  const json = await response.json();
-  const edges = json.data?.currentAppInstallation?.metafields?.edges || [];
   let settings = {
     enabled: true,
     isMarquee: true,
@@ -44,12 +27,26 @@ export const loader = async ({ request }) => {
     textColor: "#ffffff",
   };
 
-  if (edges.length > 0 && edges[0].node?.value) {
-    try {
-      settings = { ...settings, ...JSON.parse(edges[0].node.value) };
-    } catch (e) {
-      console.error("Parse settings error", e);
+  try {
+    const response = await admin.graphql(
+      `#graphql
+        query getMetafield {
+          currentAppInstallation {
+            metafield(namespace: "announcement_bar", key: "settings") {
+              value
+            }
+          }
+        }`
+    );
+
+    const json = await response.json();
+    const rawValue = json.data?.currentAppInstallation?.metafield?.value;
+
+    if (rawValue) {
+      settings = { ...settings, ...JSON.parse(rawValue) };
     }
+  } catch (error) {
+    console.error("Failed to load metafield settings, using defaults:", error);
   }
 
   return { settings };
@@ -60,48 +57,52 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const settingsJson = formData.get("settings");
 
-  const appDataResponse = await admin.graphql(
-    `#graphql
-      query getAppInstallationId {
-        currentAppInstallation {
-          id
-        }
-      }`
-  );
-  const appData = await appDataResponse.json();
-  const ownerId = appData.data?.currentAppInstallation?.id;
-
-  if (ownerId) {
-    await admin.graphql(
+  try {
+    const appDataResponse = await admin.graphql(
       `#graphql
-        mutation CreateAppDataMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
-          metafieldsSet(metafields: $metafieldsSetInput) {
-            metafields {
-              id
-              key
-              namespace
-              value
-            }
-            userErrors {
-              field
-              message
-            }
+        query getAppInstallationId {
+          currentAppInstallation {
+            id
           }
-        }`,
-      {
-        variables: {
-          metafieldsSetInput: [
-            {
-              namespace: "announcement_bar",
-              key: "settings",
-              type: "json",
-              value: settingsJson,
-              ownerId: ownerId,
-            },
-          ],
-        },
-      }
+        }`
     );
+    const appData = await appDataResponse.json();
+    const ownerId = appData.data?.currentAppInstallation?.id;
+
+    if (ownerId) {
+      await admin.graphql(
+        `#graphql
+          mutation CreateAppDataMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
+            metafieldsSet(metafields: $metafieldsSetInput) {
+              metafields {
+                id
+                key
+                namespace
+                value
+              }
+              userErrors {
+                field
+                message
+              }
+            }
+          }`,
+        {
+          variables: {
+            metafieldsSetInput: [
+              {
+                namespace: "announcement_bar",
+                key: "settings",
+                type: "json",
+                value: settingsJson,
+                ownerId: ownerId,
+              },
+            ],
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Failed to save metafield settings:", error);
   }
 
   return { success: true };
