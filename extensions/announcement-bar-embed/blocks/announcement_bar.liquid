@@ -10,7 +10,7 @@
 {% assign is_marquee = settings_data.isMarquee %}
 {% if is_marquee == nil %}{% assign is_marquee = true %}{% endif %}
 
-<div id="shopify-announcement-marquee-bar" style="background: {{ bg_color }}; color: {{ text_color }}; width: 100%; position: relative; z-index: 999999; overflow: hidden; padding: 10px 0; font-size: 14px; font-weight: 500; line-height: 1.4;">
+<div id="shopify-announcement-marquee-bar" style="background: {{ bg_color }}; color: {{ text_color }}; width: 100%; position: fixed; top: 0; left: 0; right: 0; z-index: 999999; overflow: hidden; padding: 10px 0; font-size: 14px; font-weight: 500; line-height: 1.4; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
   {% if is_marquee %}
     <div class="announcement-marquee-track">
       <div class="announcement-marquee-content">
@@ -59,6 +59,28 @@
   to { transform: translateX(-50%); }
 }
 </style>
+
+<script>
+(function() {
+  function adjustBodyOffset() {
+    var bar = document.getElementById('shopify-announcement-marquee-bar');
+    if (bar) {
+      var barHeight = bar.offsetHeight;
+      document.body.style.paddingTop = barHeight + 'px';
+      var stickyHeader = document.querySelector('sticky-header, .shopify-section-header-sticky, header.header');
+      if (stickyHeader && getComputedStyle(stickyHeader).position === 'fixed') {
+        stickyHeader.style.top = barHeight + 'px';
+      }
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adjustBodyOffset);
+  } else {
+    adjustBodyOffset();
+  }
+  window.addEventListener('resize', adjustBodyOffset);
+})();
+</script>
 {% endif %}
 
 {% schema %}

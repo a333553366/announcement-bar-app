@@ -1,19 +1,25 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "Announcement Bar Marquee"
+client_id = "1ebf405f4126982b0860af31647c1be0"
+application_url = "https://announcement-bar-app-z55d.onrender.com"
 embedded = true
+name = "Announcement Bar Marquee"
 
-[build]
-automatically_update_urls_on_dev = false
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products,write_products"
+
+[auth]
+redirect_urls = [
+  "https://announcement-bar-app-z55d.onrender.com/auth/callback",
+  "https://announcement-bar-app-z55d.onrender.com/auth/shopify/callback",
+  "https://announcement-bar-app-z55d.onrender.com/api/auth/callback"
+]
 
 [webhooks]
 api_version = "2026-10"
 
   [[webhooks.subscriptions]]
   uri = "/api/webhooks"
+  topics = [ "app/uninstalled", "app/scopes_update" ]
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
-  topics = [ "app/scopes_update", "app/uninstalled" ]
-
-[access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products,write_products"

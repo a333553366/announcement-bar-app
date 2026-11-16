@@ -18,6 +18,7 @@ import { authenticate } from "../shopify.server";
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
 
+  let shopName = "";
   let settings = {
     enabled: true,
     isMarquee: true,
@@ -30,7 +31,10 @@ export const loader = async ({ request }) => {
   try {
     const response = await admin.graphql(
       `#graphql
-        query getMetafield {
+        query getMetafieldAndShop {
+          shop {
+            name
+          }
           currentAppInstallation {
             metafield(namespace: "announcement_bar", key: "settings") {
               value
@@ -40,6 +44,7 @@ export const loader = async ({ request }) => {
     );
 
     const json = await response.json();
+    shopName = json.data?.shop?.name || "";
     const rawValue = json.data?.currentAppInstallation?.metafield?.value;
 
     if (rawValue) {
@@ -49,7 +54,7 @@ export const loader = async ({ request }) => {
     console.error("Failed to load metafield settings, using defaults:", error);
   }
 
-  return { settings };
+  return { settings, shopName };
 };
 
 export const action = async ({ request }) => {
@@ -109,7 +114,7 @@ export const action = async ({ request }) => {
 };
 
 export default function Index() {
-  const { settings: initialSettings } = useLoaderData();
+  const { settings: initialSettings, shopName } = useLoaderData();
   const submit = useSubmit();
   const navigation = useNavigation();
   const isSaving = navigation.state === "submitting";
@@ -145,7 +150,10 @@ export default function Index() {
   };
 
   return (
-    <Page title="Announcement Bar & Marquee">
+    <Page
+      title="Announcement Bar & Marquee"
+      subtitle={shopName ? `Connected store: ${shopName} — Displayed at top of storefront` : undefined}
+    >
       <BlockStack gap="500">
         {savedBanner && (
           <Banner tone="success" onDismiss={() => setSavedBanner(false)}>
@@ -254,7 +262,7 @@ export default function Index() {
             <Card>
               <BlockStack gap="300">
                 <Text variant="headingMd" as="h2">
-                  Live Preview
+                  Live Preview (Top Bar)
                 </Text>
 
                 <style>{`
@@ -293,8 +301,8 @@ export default function Index() {
                 <Text variant="bodySm" tone="subdued">
                   {enabled
                     ? isMarquee
-                      ? "Status: Active (Scrolling Marquee)"
-                      : "Status: Active (Static Display)"
+                      ? "Status: Active (Scrolling Marquee at Top)"
+                      : "Status: Active (Static Display at Top)"
                     : "Status: Disabled"}
                 </Text>
               </BlockStack>
