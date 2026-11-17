@@ -1,11 +1,11 @@
-{% assign settings_data = app.metafields.announcement_bar.settings.value %}
+﻿{% assign settings_data = app.metafields.announcement_bar.settings.value %}
 {% assign is_enabled = settings_data.enabled %}
 {% if is_enabled == nil %}{% assign is_enabled = true %}{% endif %}
 
 {% if is_enabled %}
 {% assign bg_color = settings_data.bgColor | default: '#111213' %}
 {% assign text_color = settings_data.textColor | default: '#ffffff' %}
-{% assign message = settings_data.message | default: 'Special Offer: Free Worldwide Shipping on All Orders!' %}
+{% assign message = settings_data.message | default: 'Welcome to our store - customize this announcement in your app settings.' %}
 {% assign link_url = settings_data.linkUrl | default: '' %}
 {% assign is_marquee = settings_data.isMarquee %}
 {% if is_marquee == nil %}{% assign is_marquee = true %}{% endif %}

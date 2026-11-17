@@ -1,4 +1,4 @@
-export const meta = () => {
+﻿export const meta = () => {
   return [
     { title: "Privacy Policy - Announcement Bar Marquee" },
     { name: "description", content: "Privacy Policy for Announcement Bar Marquee Shopify App" },

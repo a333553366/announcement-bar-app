@@ -1,4 +1,4 @@
-import { authenticate } from "../shopify.server";
+﻿import { authenticate } from "../shopify.server";
 import db from "../db.server";
 
 export const action = async ({ request }) => {
@@ -14,3 +14,4 @@ export const action = async ({ request }) => {
 
   return new Response();
 };
+

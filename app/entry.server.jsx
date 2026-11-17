@@ -1,4 +1,4 @@
-import { PassThrough } from "stream";
+﻿import { PassThrough } from "stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { ServerRouter } from "react-router";
 import { createReadableStreamFromReadable } from "@react-router/node";
@@ -49,3 +49,4 @@ export default async function handleRequest(
     setTimeout(abort, streamTimeout + 1000);
   });
 }
+

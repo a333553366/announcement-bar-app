@@ -1,4 +1,4 @@
-import { LoginErrorType } from "@shopify/shopify-app-react-router/server";
+﻿import { LoginErrorType } from "@shopify/shopify-app-react-router/server";
 
 export function loginErrorMessage(loginErrors) {
   if (loginErrors?.shop === LoginErrorType.MissingShop) {
@@ -9,3 +9,4 @@ export function loginErrorMessage(loginErrors) {
 
   return {};
 }
+

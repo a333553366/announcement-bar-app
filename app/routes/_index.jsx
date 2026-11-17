@@ -1,8 +1,8 @@
-import { redirect } from "react-router";
+锘縤mport { redirect } from "react-router";
 
 export const loader = async ({ request }) => {
   const url = new URL(request.url);
-  // 无论是谁访问根目录，一律强制 302 抛出重定向到 /app
+  // 锟斤拷锟斤拷锟斤拷谁锟斤拷锟绞革拷目录锟斤拷一锟斤拷强锟斤拷 302 锟阶筹拷锟截讹拷锟斤拷 /app
   const search = url.searchParams.toString();
   return redirect(search ? `/app?${search}` : "/app");
 };

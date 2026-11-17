@@ -22,7 +22,7 @@ export const loader = async ({ request }) => {
   let settings = {
     enabled: true,
     isMarquee: true,
-    message: "Special Offer: Free Worldwide Shipping on All Orders!",
+    message: "Welcome to our store - customize this announcement in your app settings.",
     linkUrl: "",
     bgColor: "#111213",
     textColor: "#ffffff",
@@ -122,7 +122,7 @@ export default function Index() {
   const [enabled, setEnabled] = useState(initialSettings.enabled ?? true);
   const [isMarquee, setIsMarquee] = useState(initialSettings.isMarquee ?? true);
   const [message, setMessage] = useState(
-    initialSettings.message || "Special Offer: Free Worldwide Shipping on All Orders!"
+    initialSettings.message || "Welcome to our store - customize this announcement in your app settings."
   );
   const [linkUrl, setLinkUrl] = useState(initialSettings.linkUrl || "");
   const [bgColor, setBgColor] = useState(initialSettings.bgColor || "#111213");
