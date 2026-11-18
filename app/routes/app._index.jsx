@@ -18,12 +18,12 @@ export const loader = async ({ request }) => {
     speed: "normal",
   };
 
-  // 1. 检查正式订阅状态（上线前测试可设为 isTest: true，正式运营改回 false）
+  // 1. 正式订阅检查（isTest: false 走真实生产环境扣费检查）
   try {
     if (billing && typeof billing.check === "function") {
       const billingCheck = await billing.check({
         plans: [MONTHLY_PLAN, ANNUAL_PLAN],
-        isTest: true, 
+        isTest: false, 
       });
       hasActivePayment = Boolean(billingCheck?.hasActivePayment);
     }
@@ -61,7 +61,7 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const actionType = formData.get("actionType");
 
-  // 1. 发起正式订阅
+  // 1. 发起正式订阅请求（isTest: false）
   if (actionType === "subscribe") {
     try {
       const planType = formData.get("planType");
@@ -71,7 +71,7 @@ export const action = async ({ request }) => {
       await billing.request({
         session,
         plan: selectedPlan,
-        isTest: true, // 审核期和测试设为 true，上线后改为 false
+        isTest: false, // 正式上线版：关闭测试模式，触发真实扣费
         returnUrl,
       });
     } catch (error) {
