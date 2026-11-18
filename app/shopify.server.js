@@ -10,17 +10,12 @@ import prisma from "./db.server";
 export const MONTHLY_PLAN = "Pro Monthly Plan";
 export const ANNUAL_PLAN = "Pro Annual Plan";
 
-const defaultScopes = [
-  "read_products",
-  "write_products",
-];
-
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
   apiVersion: ApiVersion.October24,
-  scopes: process.env.SCOPES ? process.env.SCOPES.split(",") : defaultScopes,
-  appUrl: process.env.SHOPIFY_APP_URL || "https://flash-countdown-timer.onrender.com",
+  scopes: process.env.SCOPES?.split(","),
+  appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
@@ -28,7 +23,7 @@ const shopify = shopifyApp({
     [MONTHLY_PLAN]: {
       lineItems: [
         {
-          amount: 40,
+          amount: 39,
           currencyCode: "USD",
           interval: BillingInterval.Every30Days,
         },
@@ -37,7 +32,7 @@ const shopify = shopifyApp({
     [ANNUAL_PLAN]: {
       lineItems: [
         {
-          amount: 300,
+          amount: 289,
           currencyCode: "USD",
           interval: BillingInterval.Annual,
         },
@@ -58,6 +53,5 @@ export const apiVersion = ApiVersion.October24;
 export const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
 export const authenticate = shopify.authenticate;
 export const unauthenticated = shopify.unauthenticated;
-export const login = shopify.login;
 export const registerWebhooks = shopify.registerWebhooks;
 export const sessionStorage = shopify.sessionStorage;
